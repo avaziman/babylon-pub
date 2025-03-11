@@ -43,3 +43,5 @@ cleanup() {
     docker-compose down
     echo "Docker Compose stopped."
 }
+
+trap cleanup EXIT

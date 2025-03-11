@@ -2,20 +2,6 @@
 
 set -e
 
-echo "Checking and installing wget (if needed)..."
-if ! command -v wget &>/dev/null; then
-    echo "wget is not installed. Installing..."
-    sudo apt-get update -y
-    sudo apt-get install -y wget
-    echo "wget installed."
-else
-    echo "wget is already installed."
-fi
-
-echo "Downloading docker-compose.yml from GitHub repository..."
-wget -O docker-compose.yml https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/docker-compose.yml
-echo "docker-compose.yml downloaded successfully."
-
 echo "Checking and installing Docker in Ubuntu (if needed)..."
 if ! command -v docker &>/dev/null; then
     echo "Docker is not installed. Installing..."

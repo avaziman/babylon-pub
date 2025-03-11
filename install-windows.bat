@@ -57,11 +57,12 @@ if not exist "install-ubuntu.bash" (
     powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/install-ubuntu.bash' -OutFile 'install-ubuntu.bash'"
 )
 
+
+(sleep 5 && start http://localhost:8080 && echo "Opening application in the default browser (port 8080)...") &
+
 :: Execute the install-ubuntu.sh script using WSL
 wsl -d Ubuntu --user root bash ./install-ubuntu.bash
 
-echo "Opening application in the default browser (port 8080)..."
-start http://localhost:8080
 
 echo.
 echo Script finished. If WSL, VirtualMachinePlatform, or Ubuntu was just installed,

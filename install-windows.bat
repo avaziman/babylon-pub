@@ -58,7 +58,7 @@ if not exist "install-ubuntu.bash" (
 )
 
 
-(sleep 5 && start http://localhost:8080 && echo "Opening application in the default browser (port 8080)...") &
+(timeout /t 5 && start http://localhost:8080 && echo "Opening application in the default browser (port 8080)...") &
 
 :: Execute the install-ubuntu.sh script using WSL
 wsl -d Ubuntu --user root bash ./install-ubuntu.bash

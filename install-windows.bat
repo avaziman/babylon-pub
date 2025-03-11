@@ -23,7 +23,7 @@ if "%1"=="choco_install" (
 :: 2. Check if WSL is enabled; if not, request admin and install it
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux).State -ne 'Enabled') { Write-Host 'WSL not enabled. Elevating for installation...'; Start-Process -Verb RunAs -FilePath '%~dpnx0' -ArgumentList 'install_wsl'; exit; } else { Write-Host 'WSL is already enabled.' }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "wsl.exe --list --verbose 2>$null; if ($LASTEXITCODE -ne 0) { Write-Host 'WSL not enabled. Elevating for installation...'; Start-Process -Verb RunAs -FilePath '%~dpnx0' -ArgumentList 'install_wsl'; exit; } else { Write-Host 'WSL is already enabled.' }"
 
 if "%1"=="install_wsl" (
     echo Enabling WSL and installing WSL2...

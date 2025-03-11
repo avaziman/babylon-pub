@@ -29,7 +29,7 @@ echo "Checking for docker-compose.yml and launching containers..."
 if [ -f docker-compose.yml ]; then
     echo "Found docker-compose.yml. Pulling and launching containers..."
     docker-compose pull
-    docker-compose up -d
+    docker-compose up
     echo "Containers are up and running."
 else
     echo "docker-compose.yml not found in the current directory."

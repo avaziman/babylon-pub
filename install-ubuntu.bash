@@ -37,3 +37,9 @@ else
 fi
 
 echo "Ubuntu Setup complete."
+
+cleanup() {
+    echo "Stopping Docker Compose..."
+    docker-compose down
+    echo "Docker Compose stopped."
+}

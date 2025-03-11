@@ -23,16 +23,7 @@ if "%1"=="choco_install" (
 :: 2. Check if WSL is enabled; if not, request admin and install it
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& {
-    $wslState = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux).State;
-    if ($wslState -ne 'Enabled') {
-        Write-Host 'WSL not enabled. Elevating for installation...';
-        Start-Process -Verb RunAs -FilePath '%~dpnx0' -ArgumentList 'install_wsl';
-        exit;
-    } else {
-        Write-Host 'WSL is already enabled.';
-    }
-}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux).State -ne 'Enabled') { Write-Host 'WSL not enabled. Elevating for installation...'; Start-Process -Verb RunAs -FilePath '%~dpnx0' -ArgumentList 'install_wsl'; exit; } else { Write-Host 'WSL is already enabled.' }"
 
 if "%1"=="install_wsl" (
     echo Enabling WSL and installing WSL2...
@@ -46,16 +37,7 @@ if "%1"=="install_wsl" (
 :: 3. Check if Ubuntu is installed in WSL; if not, install it
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& {
-    $installedDistros = wsl -l -q;
-    if ($installedDistros -notcontains 'Ubuntu') {
-        Write-Host 'Installing Ubuntu...';
-        wsl --install -d Ubuntu;
-        Write-Host 'Ubuntu installation triggered.';
-    } else {
-        Write-Host 'Ubuntu is already installed in WSL.';
-    }
-}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "if (-not (wsl -l -q | Select-String 'Ubuntu')) { Write-Host 'Installing Ubuntu...'; wsl --install -d Ubuntu; Write-Host 'Ubuntu installation triggered.' } else { Write-Host 'Ubuntu is already installed in WSL.' }"
 
 :: Give WSL a few seconds to finalize installation
 timeout /t 10 > nul
@@ -64,18 +46,14 @@ timeout /t 10 > nul
 :: 4. Run the shell script inside WSL
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& {
-    if (-not (Test-Path 'docker-compose.yml')) {
-        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/docker-compose.yml' -OutFile 'docker-compose.yml';
-        Write-Host 'docker-compose.yml downloaded successfully.';
-    }
-}"
+if not exist "docker-compose.yml" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/docker-compose.yml' -OutFile 'docker-compose.yml'"
+    echo docker-compose.yml downloaded successfully.
+)
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& {
-    if (-not (Test-Path 'install-ubuntu.bash')) {
-        Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/install-ubuntu.bash' -OutFile 'install-ubuntu.bash';
-    }
-}"
+if not exist "install-ubuntu.bash" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/install-ubuntu.bash' -OutFile 'install-ubuntu.bash'"
+)
 
 :: Execute the install-ubuntu.sh script using WSL
 wsl -d Ubuntu --user root bash ./install-ubuntu.bash

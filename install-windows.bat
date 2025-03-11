@@ -39,6 +39,9 @@ timeout /t 10 > nul
 :: 5. Run the shell script inside WSL
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+# Start of Selection
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& {if (-not (Test-Path 'install-ubuntu.bash')) {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/avaziman/babylon-pub/refs/heads/main/install-ubuntu.bash' -OutFile 'install-ubuntu.bash'}}"
+
 :: Execute the install-ubuntu.sh script using WSL
 wsl -d Ubuntu --user root bash ./install-ubuntu.bash
 

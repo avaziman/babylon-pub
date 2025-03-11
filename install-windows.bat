@@ -37,7 +37,7 @@ if "%1"=="install_wsl" (
 :: 3. Check if Ubuntu is installed in WSL; if not, install it
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "if (-not (wsl -l -v | Select-String 'Ubuntu')) { Write-Host 'Installing Ubuntu...'; wsl --install -d Ubuntu; Write-Host 'Ubuntu installation triggered.' } else { Write-Host 'Ubuntu is already installed in WSL.' }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "if (-not (wsl -l -q) -match 'Ubuntu') { Write-Host 'Installing Ubuntu...'; wsl --install -d Ubuntu; Write-Host 'Ubuntu installation triggered.' } else { Write-Host 'Ubuntu is already installed in WSL.' }"
 
 :: Give WSL a few seconds to finalize installation
 timeout /t 10 > nul

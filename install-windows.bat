@@ -37,10 +37,12 @@ if "%1"=="install_wsl" (
 :: 3. Check if Ubuntu is installed in WSL; if not, install it
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "if (-not (wsl -l -q) -match 'Ubuntu') { Write-Host 'Installing Ubuntu...'; wsl --install -d Ubuntu; Write-Host 'Ubuntu installation triggered.' } else { Write-Host 'Ubuntu is already installed in WSL.' }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "if (-not (wsl -l -q) -match 'Ubuntu') { Write-Host 'Installing Ubuntu...'; wsl --install -d Ubuntu; Write-Host 'Ubuntu installation triggered.'; exit 0 } else { Write-Host 'Ubuntu is already installed in WSL.'; exit 1 }"
 
-:: Give WSL a few seconds to finalize installation
-timeout /t 10 > nul
+if %errorlevel% equ 0 (
+    :: Give WSL a few seconds to finalize installation
+    timeout /t 10 > nul
+)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: 4. Run the shell script inside WSL

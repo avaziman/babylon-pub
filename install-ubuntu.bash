@@ -15,21 +15,21 @@ else
     echo "Docker is already installed."
 fi
 
-echo "Checking and installing Docker Compose (if needed)..."
-if ! command -v docker-compose &>/dev/null; then
-    echo "Docker Compose is not installed. Installing..."
+echo "Checking and installing Docker Compose plugin (if needed)..."
+if ! docker compose version &>/dev/null; then
+    echo "Docker Compose plugin is not installed. Installing..."
     sudo apt-get update -y
-    sudo apt-get install -y docker-compose
-    echo "Docker Compose installed."
+    sudo apt-get install -y docker-compose-plugin
+    echo "Docker Compose plugin installed."
 else
-    echo "Docker Compose is already installed."
+    echo "Docker Compose plugin is already installed."
 fi
 
 echo "Checking for docker-compose.yml and launching containers..."
 if [ -f docker-compose.yml ]; then
     echo "Found docker-compose.yml. Pulling and launching containers..."
-    docker-compose pull
-    docker-compose up
+    docker compose pull
+    docker compose up
     echo "Containers are up and running."
 else
     echo "docker-compose.yml not found in the current directory."
@@ -40,7 +40,7 @@ echo "Ubuntu Setup complete."
 
 cleanup() {
     echo "Stopping Docker Compose..."
-    docker-compose down
+    docker compose down
     echo "Docker Compose stopped."
 }
 
